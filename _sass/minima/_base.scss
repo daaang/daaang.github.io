@@ -196,3 +196,17 @@ pre {
     fill: $grey-color;
   }
 }
+
+figure#signature {
+  margin: 0;
+  padding: 0;
+
+  img {
+    float: right;
+    width: $sig-width;
+  }
+
+  figcaption {
+    display: none;
+  }
+}
