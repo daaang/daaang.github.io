@@ -1,0 +1,106 @@
+#!/usr/bin/env python3
+from argparse import ArgumentParser
+from os import environ, unlink
+from os.path import join, exists, isdir
+from re import compile as re_compile
+from time import tzset, strftime
+
+RE_MKDASH = re_compile(r"[ _.]")
+RE_REMOVE = re_compile(r"[^-a-z0-9]")
+RE_DASH = re_compile(r"-+")
+
+def sluggify (text):
+    result = text.lower()
+    result = RE_MKDASH.sub("-", result)
+    result = RE_REMOVE.sub("", result)
+    return RE_DASH.sub("-", result).strip("-")
+
+def yamlify (text):
+    if '"' in text or "\\" in text:
+        return "'{}'".format(text.replace("'", "''"))
+
+    else:
+        return '"{}"'.format(text)
+
+default_dest = environ.get("BLOGPOST_DEST", "")
+
+parser = ArgumentParser(description="make a file into a blog post")
+
+parser.add_argument("post_file",
+                    help="source file to create post from")
+parser.add_argument("title",
+                    help="title of the blog post")
+
+parser.add_argument("-d", "--delete-original",
+                    dest="delete_original",
+                    action="store_const",
+                    const=True,
+                    default=True,
+                    help="delete the original file after creating " \
+                         "the blog post")
+parser.add_argument("-k", "--keep-original",
+                    dest="delete_original",
+                    action="store_const",
+                    const=False,
+                    help="save the original file after creating " \
+                         "the blog post")
+
+parser.add_argument("-s", "--slug",
+                    default=None,
+                    help="set a custom slug (or one will be generated)")
+
+if isdir(default_dest):
+    parser.add_argument("-o", "--output-directory",
+                        default=default_dest,
+                        help="specify a directory other than " \
+                             "$BLOGPOST_DEST")
+
+else:
+    parser.add_argument("-o", "--output-directory",
+                        required=True,
+                        help="specify a directory other than " \
+                             "$BLOGPOST_DEST")
+
+args = parser.parse_args()
+dest = args.output_directory
+assert isdir(dest)
+assert exists(args.post_file)
+
+if args.slug is None:
+    slug = sluggify(args.title)
+
+else:
+    slug = args.slug
+
+environ["TZ"] = "America/Detroit"
+tzset()
+full = strftime("%Y-%m-%d %H:%M:%S %z")
+day = strftime("%Y-%m-%d")
+
+header = """---
+layout: post
+title:  {}
+date:   {}
+---
+""".format(yamlify(args.title), full)
+
+slug = "{}-{}".format(day, slug)
+output = join(dest, slug + ".markdown")
+
+n = 1
+while exists(output):
+    n += 1
+    output = join(dest, "{}-{:d}.markdown".format(slug, n))
+
+with open(args.post_file, "r") as r:
+    header += r.read()
+
+with open(output, "w") as w:
+    w.write(header)
+
+if args.delete_original:
+    print("Moved {} to {}".format(args.post_file, output))
+    unlink(args.post_file)
+
+else:
+    print("Copied {} to {}".format(args.post_file, output))
