@@ -14,6 +14,7 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 title: "Matt’s home away from home"
+author: Matt LaChance
 description: >
   This is the third thing I’ve changed in this jekyll site. Maybe
   someday I’ll change it again, so keep an eye out, definitely!
