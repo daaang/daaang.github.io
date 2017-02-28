@@ -1,0 +1,14 @@
+---
+layout: default
+---
+<article class="haiku">
+  <header>
+    <h1>{{ page.title | escape }}</h1>
+  </header>
+
+  <ul>
+  {% for haiku in site.data.haiku %}
+    <li><a href="{{ haiku.uri }}">{{ haiku.text }}</a></li>
+  {% endfor %}
+  </ul>
+</article>

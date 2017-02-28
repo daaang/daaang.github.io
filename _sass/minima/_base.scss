@@ -210,3 +210,11 @@ figure#signature {
     display: none;
   }
 }
+
+article.haiku {
+  ul {
+    li {
+      list-style-type: none;
+    }
+  }
+}
