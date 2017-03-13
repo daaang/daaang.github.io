@@ -116,3 +116,7 @@ This is pretty ugly, but it's the beginning of a solution that can be
 hidden away somewhere away from code that could otherwise be clean.
 
 Time to start over with some unit tests.
+
+**Update:** [I started over with unit tests][1].
+
+[1]: {% post_url 2017-03-13-revisiting-try-forever %}
