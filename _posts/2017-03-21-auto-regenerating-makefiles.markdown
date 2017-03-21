@@ -22,6 +22,7 @@ $(CONFIG_STATUS): configure
 	else                                          \
 	  $(CONFIG_SHELL) configure --no-create;      \
 	fi
+	
 {% endhighlight %}
 
 In this case, let's say we have a standard unconfigured package. When
@@ -65,7 +66,7 @@ Oh! And in other news, I figured out a fun detail about heredocs: you
 can write `<<'EOF'` to get it to parse the data literally (like with
 single quotes). For example:
 
-{% highlight shell session %}
+{% highlight shell_session %}
 $ cat <<EOF
 > like double quotes: \$
 > EOF
@@ -74,6 +75,7 @@ $ cat <<'EOF'
 > like single quotes: \$
 > EOF
 like single quotes: \$
+$ 
 {% endhighlight %}
 
 Also, I can use heredocs to read multiple variables from a single line
@@ -92,13 +94,9 @@ categorize_arg() {
   #     "long_arg          no-create             "
 }
 
-# With subshell
-for arg in "$@"; do
-  categorize_arg "$arg"
-done | while IFS="^I" read arg_type name value; do
-  # We are now in a subshell, and any variables we set here will not
-  # persist beyond this loop.
-  case "$arg_type" in
+process_categorized_arg() {
+  # Takes three arguments: arg_type, arg_name, and arg_value
+  case "$1" in
     arg_with_value)
       # etc
       ;;
@@ -107,10 +105,21 @@ done | while IFS="^I" read arg_type name value; do
       # etc
       ;;
 
+    # etc
+
     *)
       # error out
       ;;
   esac
+}
+
+# With subshell
+for arg in "$@"; do
+  categorize_arg "$arg"
+done | while IFS="^I" read arg_type name value; do
+  # We are now in a subshell, and any variables we set here will not
+  # persist beyond this loop.
+  process_categorized_arg "$arg_type" "$name" "$value"
 done
 
 # Without subshell
@@ -121,19 +130,7 @@ EOF
 
   # This is the same as above except that we haven't entered a subshell,
   # so we can set variables without worrying about losing them.
-  case "$arg_type" in
-    arg_with_value)
-      # etc
-      ;;
-
-    long_arg)
-      # etc
-      ;;
-
-    *)
-      # error out
-      ;;
-  esac
+  process_categorized_arg "$arg_type" "$name" "$value"
 done
 {% endhighlight %}
 
