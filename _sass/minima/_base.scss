@@ -238,8 +238,12 @@ article.haiku {
 table {
   border-collapse: collapse;
 
+  tr:hover {
+    background-color: #4b5f6d;
+  }
+
   tbody {
-    tr:nth-child(odd) {
+    tr:nth-child(odd):not(:hover) {
       background-color: #40525e;
     }
   }
