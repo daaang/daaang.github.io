@@ -21,6 +21,7 @@ description: >
   found to problems I‘ve had.
 baseurl: ""
 url: "https://daaang.github.io"
+timezone: America/Detroit
 twitter_username: hahawhynot
 github_username:  daaang
 
