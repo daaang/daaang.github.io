@@ -17,10 +17,10 @@ Makefile: $(CONFIG_STATUS)
 	$(CONFIG_SHELL) $(CONFIG_STATUS)
 
 $(CONFIG_STATUS): configure
-	if [ -s $(CONFIG_STATUS) ]; then              \
-	  $(CONFIG_SHELL) $(CONFIG_STATUS) --recheck; \
-	else                                          \
-	  $(CONFIG_SHELL) configure --no-create;      \
+	if [ -s $(CONFIG_STATUS) ]; then \
+	  $(CONFIG_SHELL) configure `$(CONFIG_SHELL) $(CONFIG_STATUS) --config`; \
+	else \
+	  $(CONFIG_SHELL) configure; \
 	fi
 	
 {% endhighlight %}
