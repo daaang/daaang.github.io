@@ -40,6 +40,15 @@ ul, ol, dl, figure, table,
 
 
 /**
+ * `main` element
+ */
+main {
+  display: block; /* Default value of `display` of `main` element is 'inline' in IE 11. */
+}
+
+
+
+/**
  * Images
  */
 img {
@@ -113,8 +122,15 @@ a {
     color: $text-color;
     text-decoration: underline;
   }
-}
 
+  .social-media-list &:hover {
+    text-decoration: none;
+
+    .username {
+      text-decoration: underline;
+    }
+  }
+}
 
 
 /**
@@ -124,7 +140,7 @@ blockquote {
   color: $grey-color;
   border-left: 4px solid $grey-color-light;
   padding-left: $spacing-unit / 2;
-  font-size: 18px;
+  @include relative-font-size(1.125);
   letter-spacing: -1px;
   font-style: italic;
 
@@ -140,7 +156,8 @@ blockquote {
  */
 pre,
 code {
-  font-size: 15px;
+  @include relative-font-size(0.9375);
+  border: 1px solid $grey-color-light;
   border-radius: 3px;
 }
 
@@ -204,26 +221,19 @@ pre {
 /**
  * Icons
  */
-.icon > svg {
-  display: inline-block;
-  vertical-align: middle;
 
-  path {
-    fill: $grey-color;
-  }
+.svg-icon {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    fill: #{$grey-color};
+    padding-right: 5px;
+    vertical-align: text-top;
 }
 
-figure#signature {
-  margin: 0;
-  padding: 0;
-
-  img {
-    float: right;
-    width: $sig-width;
-  }
-
-  figcaption {
-    display: none;
+.social-media-list {
+  li + li {
+    padding-top: 5px;
   }
 }
 
@@ -235,8 +245,17 @@ article.haiku {
   }
 }
 
+
+/**
+ * Tables
+ */
 table {
+  margin-bottom: $spacing-unit;
+  width: 100%;
+  text-align: $table-text-align;
+  color: lighten($text-color, 18%);
   border-collapse: collapse;
+  border: 1px solid $grey-color-light;
 
   tr:hover {
     background-color: #4b5f6d;
@@ -248,10 +267,33 @@ table {
     }
   }
 
-  tr {
-    td, th {
-      padding-left: 1em;
-    }
+  th, td {
+    padding: ($spacing-unit / 3) ($spacing-unit / 2);
+  }
+  th {
+    background-color: lighten($grey-color-light, 3%);
+    border: 1px solid darken($grey-color-light, 4%);
+    border-bottom-color: darken($grey-color-light, 12%);
+  }
+  td {
+    border: 1px solid $grey-color-light;
+  }
+}
+
+/**
+ * Custom stuff
+ */
+figure#signature {
+  margin: 0;
+  padding: 0;
+
+  img {
+    float: right;
+    width: $sig-width;
+  }
+
+  figcaption {
+    display: none;
   }
 }
 
